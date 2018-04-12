@@ -30,7 +30,7 @@ public:
 
 	~huffman_tree();
 
-	void make_huffman_node_map(std::string inputFile) throw();
+	void make_huffman_node_map(std::string input_file) throw();
 
 	void make_huffman_node_queue();
 
@@ -38,7 +38,13 @@ public:
 
 	void in_order(std::shared_ptr<huffman_node> node, std::string binary_code);
 
-	void compress(std::string inputFile, std::string outputFile);
+	void compress(std::string input_file, std::string output_file);
+
+	void convert(std::string input_file, std::string output_file);
+
+	int packed_size(std::string buffer) const;
+
+	std::string make_buffer(std::string input_file) const;
 
 };
 

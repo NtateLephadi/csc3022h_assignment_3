@@ -1,0 +1,23 @@
+huffman_tree.h huffman_node.h
+
+header files that contain all declarations of methods and variables.
+
+huffman_tree.cpp huffman_node.cpp
+
+source files that contains all definitions of the methods defined in the header files
+
+huffencode.cpp 
+
+source file that implements all the functions in hufman_node.cpp and huffman_tree.cpp
+
+huffman_node_test.cpp
+
+source file that uses catch.hpp framework to test all methods in huffman_node.cpp
+
+Running huffencode.cpp
+
+use input with the following format after running make to compile and link all folders:
+
+./huffencode <inputFile> <outputFile>
+
+ensure all text files are first uploaded under csc3022_assignment_3 folder

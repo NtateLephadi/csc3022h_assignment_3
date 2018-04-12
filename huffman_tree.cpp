@@ -1,5 +1,7 @@
 #include "huffman_tree.h"
 #include "huffman_node.h"
+#include <bitset>
+
 
 using namespace std;
 
@@ -13,9 +15,9 @@ huffman_tree::~huffman_tree(){
 	huffman_tree::root = nullptr;
 }
 
-void huffman_tree::make_huffman_node_map(string inputFile) throw(){
+void huffman_tree::make_huffman_node_map(string input_file) throw(){
 	
-	ifstream ifs(inputFile);
+	ifstream ifs(input_file);
 
 	while(ifs.good()){
 
@@ -67,26 +69,59 @@ void huffman_tree::in_order(shared_ptr<huffman_node> node, std::string binary_co
   	}	
 }
 
-void huffman_tree::compress(string inputFile, string outputFile){
+string huffman_tree::make_buffer(string input_file) const{
 	string buffer = "";
-	ifstream ifs(inputFile);
+	ifstream ifs(input_file);
 	while(ifs.good()){
 		char letter = ifs.get();
 		buffer += code_table.at(letter);
 	}
 	ifs.close();
+	
+	return buffer;
+}
 
-	ofstream ofs(outputFile);
-	const char* buffer_ptr = buffer.c_str();
-	ofs.write(buffer_ptr,buffer.length());
+void huffman_tree::compress(string input_file, string output_file){
+
+	string buffer = make_buffer(input_file);
+	
+	const char* cstr = buffer.c_str();
+
+	ofstream ofs(output_file);
+
+	ofs.write(cstr, buffer.length());
+
 	ofs.close();
 
-	
-
-	ofstream ofs1(outputFile + ".hdr");
+	ofstream ofs1(output_file + ".hdr");
 	ofs1 << code_table.size() << endl;
 	for (auto& u_map: code_table){
 		ofs1 << u_map.first << ": " << u_map.second << endl;
 	}
 	ofs1.close();
+}
+
+void huffman_tree::convert(string input_file, string output_file){
+
+	ifstream ifs(input_file);
+
+	vector<bitset<8>> byte_stream;
+	while(ifs.good()){
+		char letter = ifs.get();
+		for(int i = 0; i < 8; i++){
+			byte_stream.push_back(bitset<8>(code_table.at(letter)));
+		}
+	}
+	ifs.close();
+
+	ofstream ofs(output_file + ".bin");
+	for(auto& b_vector: byte_stream){
+		ofs << b_vector;
+	}
+	ofs.close();
+}
+
+int huffman_tree::packed_size(string buffer) const{
+	int number_of_bits = (int)buffer.size();
+	return (number_of_bits / 8) + (number_of_bits % 8 ? 1 : 0);
 }
